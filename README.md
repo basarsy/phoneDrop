@@ -3,6 +3,13 @@
 Send messages, photos, videos, zips — any file — from your phone to your PC over your home Wi-Fi.
 No account, no cloud, no dependencies.
 
+<p align="center">
+  <img src="docs/screenshot-pc.png" alt="PhoneDrop on the PC: QR code to pair a phone, send box, and the received feed" width="68%">
+  &nbsp;
+  <img src="docs/screenshot-phone.png" alt="PhoneDrop on a phone: send messages, photos and files to the PC" width="24%">
+</p>
+<p align="center"><sub>Left: the PC page with the pairing QR code. Right: the phone after scanning it.</sub></p>
+
 ## Download (Windows)
 
 Grab `PhoneDrop.exe` from the [Releases](https://github.com/basarsy/phoneDrop/releases) page and double-click it —
