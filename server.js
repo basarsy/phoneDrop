@@ -18,6 +18,21 @@ const TOKEN_FILE = path.join(META_DIR, 'token');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const MAX_MESSAGE_BYTES = 1024 * 1024;
 
+// When packaged as a single executable (PhoneDrop.exe), the page is embedded as an asset.
+let sea = null;
+try { sea = require('node:sea'); if (!sea.isSea()) sea = null; } catch { sea = null; }
+const loadIndexHtml = () => sea ? sea.getAsset('index.html', 'utf8') : fsp.readFile(path.join(PUBLIC_DIR, 'index.html'));
+
+// If launched by double-clicking the exe, keep the window open on a fatal error so it can be read.
+function fatal(err) {
+  console.error('\n  PhoneDrop failed to start:', err && err.code === 'EADDRINUSE'
+    ? `port ${PORT} is already in use (is PhoneDrop already running?)` : (err && err.message) || err);
+  if (!sea) process.exit(1);
+  console.error('\n  Press Enter to close.');
+  process.stdin.resume();
+  process.stdin.once('data', () => process.exit(1));
+}
+
 fs.mkdirSync(META_DIR, { recursive: true });
 
 // A persistent secret so only devices that scanned the QR code can use the app.
@@ -176,7 +191,7 @@ async function handle(req, res) {
         '<body style="font-family:system-ui;padding:32px;text-align:center"><h2>PhoneDrop</h2>' +
         '<p>Scan the QR code shown on your PC to connect this device.</p>', { 'Content-Type': 'text/html; charset=utf-8' });
     }
-    const html = await fsp.readFile(path.join(PUBLIC_DIR, 'index.html'));
+    const html = await loadIndexHtml();
     return send(res, 200, html, { 'Content-Type': 'text/html; charset=utf-8' });
   }
 
@@ -289,6 +304,7 @@ const server = http.createServer((req, res) => {
   });
 });
 server.requestTimeout = 0; // allow very large / slow uploads
+server.on('error', fatal);
 
 server.listen(PORT, '0.0.0.0', () => {
   const local = `http://localhost:${PORT}`;
