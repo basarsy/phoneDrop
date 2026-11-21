@@ -3,10 +3,21 @@
 Send messages, photos, videos, zips — any file — from your phone to your PC over your home Wi-Fi.
 No account, no cloud, no dependencies.
 
-## Run
+## Download (Windows)
+
+Grab `PhoneDrop.exe` from the [Releases](https://github.com/basarsy/phoneDrop/releases) page and double-click it —
+no Node.js install needed. The exe is unsigned, so Windows SmartScreen may warn you: click **More info → Run anyway**.
+
+## Run from source
 
 ```
 node server.js        # or double-click start.bat
+```
+
+## Build the exe
+
+```
+npm run build         # -> dist/PhoneDrop.exe (Node.js single executable application)
 ```
 
 A browser tab opens on the PC with a QR code. Scan it with your phone camera — the phone is now paired
@@ -18,7 +29,7 @@ A browser tab opens on the PC with a QR code. Scan it with your phone camera —
 
 ## First run on Windows
 
-Windows Firewall will ask whether Node.js may accept connections — allow it on **Private networks**.
+Windows Firewall will ask whether PhoneDrop (or Node.js, when run from source) may accept connections — allow it on **Private networks**.
 If your phone can't connect, make sure the Wi-Fi network is set to *Private* in Windows settings and
 both devices are on the same network.
 
