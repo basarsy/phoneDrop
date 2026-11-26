@@ -97,6 +97,7 @@
   .viewer.show { display: grid; }
   .viewer img { max-width: 100%; max-height: 100%; border-radius: 8px; }
   [hidden] { display: none !important; }
+  #saveDir { overflow-wrap: anywhere; }
 </style>
 </head>
 <body>
@@ -116,6 +117,7 @@
       <p class="hint">Phone and PC must be on the same Wi-Fi. Scan once — your phone stays paired.</p>
       <div class="row" style="margin-top:12px">
         <button class="small" id="openFolder">📂 Open folder</button>
+        <button class="small" id="chooseFolder" hidden>Change folder…</button>
         <button class="small" id="copyLink">Copy link</button>
       </div>
       <p class="hint" id="saveDir"></p>
@@ -165,7 +167,7 @@
 <div class="toast" id="toast"></div>
 <div class="viewer" id="viewer"><img alt=""></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="/vendor/qrcode.js"></script>
 <script>
 const $ = s => document.querySelector(s);
 let info = {}, items = [], filter = 'all';
@@ -214,6 +216,7 @@ async function init() {
     $('#pairCard').hidden = false;
     $('#grid').classList.add('host');
     $('#saveDir').textContent = 'Saving to ' + info.saveDir;
+    $('#chooseFolder').hidden = !info.canChooseFolder;
     const urls = info.urls || [];
     if (urls.length > 1) {
       const sel = $('#ipSelect'); sel.hidden = false;
@@ -386,6 +389,7 @@ document.addEventListener('paste', e => {
 });
 
 $('#openFolder').onclick = () => api('/api/open-folder', { method: 'POST' });
+$('#chooseFolder').onclick = () => api('/api/choose-folder', { method: 'POST' });
 
 init().catch(err => { $('#statusText').textContent = 'Error: ' + err.message; });
 </script>
