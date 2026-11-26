@@ -1,9 +1,40 @@
 {
   "name": "phone-drop",
-  "version": "1.0.0",
+  "productName": "PhoneDrop",
+  "version": "1.1.0",
   "description": "Send messages, photos and files from your phone to your PC over Wi-Fi.",
-  "main": "server.js",
-  "scripts": { "start": "node server.js", "build": "node scripts/build.js" },
+  "author": "basarsy <basarsoyturk03@gmail.com>",
+  "main": "electron/main.js",
+  "scripts": {
+    "app": "electron .",
+    "start": "node server.js",
+    "build": "electron-builder --win",
+    "build:sea": "node scripts/build.js",
+    "icon": "node scripts/make-icon.js"
+  },
   "engines": { "node": ">=18" },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "45.2.3",
+    "electron-builder": "26.18.1"
+  },
+  "build": {
+    "appId": "com.basarsy.phonedrop",
+    "productName": "PhoneDrop",
+    "directories": { "output": "release", "buildResources": "build" },
+    "files": ["server.js", "public/**", "electron/**", "package.json"],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PhoneDrop",
+      "artifactName": "PhoneDrop-Setup-${version}.exe"
+    }
+  }
 }

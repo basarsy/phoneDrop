@@ -3,6 +3,7 @@
   "output": "dist/sea-prep.blob",
   "disableExperimentalSEAWarning": true,
   "assets": {
-    "index.html": "public/index.html"
+    "index.html": "public/index.html",
+    "vendor/qrcode.js": "public/vendor/qrcode.js"
   }
 }
