@@ -29,15 +29,18 @@ function writeConfig(patch) {
 }
 
 // The pairing token lives in userData so phones stay paired when the save folder changes.
-// Reuse the token from a previous PhoneDrop.exe / `node server.js` install so existing phones keep working.
+// On first run, reuse the token from a previous PhoneDrop.exe / `node server.js` install so existing phones
+// keep working. Only once: deleting the token later must unpair phones, not bring the old token back.
 function tokenFile() {
   const file = path.join(app.getPath('userData'), 'token');
-  if (!fs.existsSync(file)) {
-    const legacy = path.join(DEFAULT_DIR, '.phonedrop', 'token');
-    try {
-      fs.mkdirSync(path.dirname(file), { recursive: true });
-      fs.copyFileSync(legacy, file);
-    } catch {}
+  if (!readConfig().tokenMigrated) {
+    if (!fs.existsSync(file)) {
+      try {
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.copyFileSync(path.join(DEFAULT_DIR, '.phonedrop', 'token'), file);
+      } catch {}
+    }
+    writeConfig({ tokenMigrated: true });
   }
   return file;
 }
@@ -171,7 +174,7 @@ function buildTrayMenu() {
     items.push({
       label: 'Start with Windows',
       type: 'checkbox',
-      checked: app.getLoginItemSettings().openAtLogin,
+      checked: app.getLoginItemSettings({ args: ['--hidden'] }).openAtLogin,
       click: item => app.setLoginItemSettings({ openAtLogin: item.checked, args: ['--hidden'] }),
     }, { type: 'separator' });
   }
